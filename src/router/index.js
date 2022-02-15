@@ -1,23 +1,29 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import KbnLoginView from "@/components/templates/KbnLoginView.vue";
+import KbnBoardView from "@/components/templates/KbnBoardView.vue";
+import KbnTaskDetailModal from "@/components/templates/KbnTaskDetailModal.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    component: KbnBoardView,
+    meta: { requiresAuth: true },
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/login",
+    component: KbnLoginView,
+  },
+  {
+    path: "/tasks/:id",
+    component: KbnTaskDetailModal,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "*",
+    redirect: "/",
   },
 ];
 
