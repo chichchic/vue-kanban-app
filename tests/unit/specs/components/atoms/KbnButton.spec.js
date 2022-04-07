@@ -7,7 +7,7 @@ describe("KbnButton", () => {
       describe("default value", () => {
         it("kbn-button 클래스를 가지는 button 요소로 구성됨", () => {
           const button = mount(KbnButton);
-          expect(button.is("button")).toEqual(true);
+          expect(button.element.tagName).toEqual("BUTTON");
           expect(button.classes()).toContain("kbn-button");
         });
       });
@@ -18,7 +18,7 @@ describe("KbnButton", () => {
               type: "button",
             },
           });
-          expect(button.is("button")).toEqual(true);
+          expect(button.element.tagName).toEqual("BUTTON");
           expect(button.classes()).toContain("kbn-button");
         });
       });
@@ -29,7 +29,7 @@ describe("KbnButton", () => {
               type: "text",
             },
           });
-          expect(button.is("button")).toEqual(true);
+          expect(button.element.tagName).toEqual("BUTTON");
           expect(button.classes()).toContain("kbn-button-text");
         });
       });

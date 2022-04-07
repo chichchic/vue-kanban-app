@@ -17,12 +17,6 @@ const auth = {
     },
   },
   action: {
-    async login({ commit }) {
-      const { token, userId } = await axios.get(
-        `${process.env.API_KEY}/auth/login`
-      );
-      commit("AUTH_LOGIN", { token, userId });
-    },
     async logout({ commit }) {
       await axios.get(`${process.env.API_KEY}/auth/logout`);
       commit("AUTH_LOGOUT");

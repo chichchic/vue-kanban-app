@@ -6,13 +6,13 @@ const localVue = createLocalVue();
 localVue.use(Vuex);
 
 describe("KbnLoginView", () => {
-  let auth, $router, store, LoginFormComponentStub;
+  let actions, $router, store, LoginFormComponentStub;
   const triggerLogin = async (loginView, target) => {
     try {
       const loginForm = loginView.getComponent(target);
       await loginForm.vm.onlogin("foo@domain.com", "12345678");
     } catch (err) {
-      console.error("rising error");
+      // trouble shooting
     }
   };
 
@@ -25,17 +25,13 @@ describe("KbnLoginView", () => {
     $router = {
       push: jest.fn(),
     };
-    auth = {
-      namespaced: true,
-      actions: {
-        login: jest.fn(),
-      },
+    actions = {
+      login: jest.fn(),
     };
     store = new Vuex.Store({
       state: {},
       mutations: {},
-      actions: {},
-      modules: { auth },
+      actions,
     });
   });
 
@@ -55,7 +51,7 @@ describe("KbnLoginView", () => {
         });
       });
       it("redirect to hompage root", (done) => {
-        auth.actions.login.mockResolvedValue();
+        actions.login.mockResolvedValue();
         triggerLogin(loginView, LoginFormComponentStub);
         setImmediate(() => {
           const mockFn = $router.push;
@@ -82,10 +78,10 @@ describe("KbnLoginView", () => {
       });
       it("error handler is called", () => {
         const message = new Error("login failed");
-        auth.actions.login.mockRejectedValue(message);
+        actions.login.mockRejectedValue(message);
         triggerLogin(loginView, LoginFormComponentStub);
         setImmediate(() => {
-          const mockFn = auth.actions.login;
+          const mockFn = actions.login;
           expect(mockFn).toHaveBeenCalled();
           expect(throwReject).toBeCalledWith(message);
         });

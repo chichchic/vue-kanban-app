@@ -13,7 +13,7 @@ export default {
     KbnLoginForm,
   },
   methods: {
-    ...mapActions("auth", ["login"]),
+    ...mapActions(["login"]),
     async handleLogin(authInfo) {
       try {
         await this.login(authInfo);
