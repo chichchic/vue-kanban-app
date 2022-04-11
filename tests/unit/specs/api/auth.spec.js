@@ -17,22 +17,22 @@ describe("Auth API module", () => {
     describe("successed", () => {
       it("got token,userId", async () => {
         const adapter = () =>
-          new Promise((response) => {
-            response({ data: { token, userId }, status: 200 });
+          new Promise((resolve) => {
+            resolve({ data: { token, userId }, status: 200 });
           });
         mockAuth(adapter);
         const res = await auth.login({
           address,
           password,
         });
-        expect(res.data).toEqual({ token, userId });
+        expect(res).toEqual({ token, userId });
       });
     });
     describe("Error", () => {
       it("got Error message", async () => {
         const message = "failed login";
         const adapter = () =>
-          new Promise((response, reject) => {
+          new Promise((resolve, reject) => {
             const err = new Error(message);
             err.response = { data: { message }, status: 401 };
             reject(err);

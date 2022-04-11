@@ -33,7 +33,11 @@ describe("login action", () => {
       const login = () => Promise.reject(new Error(message));
       mockLoginAction(login);
       commit = jest.fn();
-      future = await actions.login({ commit });
+      try {
+        await actions.login({ commit });
+      } catch (err) {
+        future = err;
+      }
     });
     it("failed", () => {
       expect(commit).toBeCalledTimes(0);

@@ -14,13 +14,12 @@ export default {
   },
   methods: {
     ...mapActions(["login"]),
-    async handleLogin(authInfo) {
-      try {
-        await this.login(authInfo);
-        this.$router.push({ path: "/" });
-      } catch (err) {
-        return this.throwReject(err);
-      }
+    handleLogin(authInfo) {
+      return this.login(authInfo)
+        .then(() => {
+          this.$router.push({ path: "/" });
+        })
+        .catch((err) => this.throwReject(err));
     },
     throwReject(err) {
       return Promise.reject(err);

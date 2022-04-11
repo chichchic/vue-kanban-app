@@ -97,22 +97,22 @@ export default {
     resetError() {
       this.error = "";
     },
-    async handleClick() {
+    handleClick() {
       if (this.disableLoginAction) {
         return;
       }
       this.progress = true;
       this.error = "";
-      try {
-        await this.onlogin({
-          email: this.email,
-          password: this.password,
+      this.onlogin({
+        email: this.email,
+        password: this.password,
+      })
+        .catch((err) => {
+          this.error = err.message;
+        })
+        .then(() => {
+          this.progress = false;
         });
-      } catch (err) {
-        this.error = err.message;
-      } finally {
-        this.progress = false;
-      }
     },
   },
 };

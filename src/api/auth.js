@@ -6,7 +6,10 @@ export default {
       client
         .post("/auth/login", authInfo)
         .then((res) => {
-          resolve(res);
+          resolve({
+            token: res.data.token,
+            userId: res.data.userId,
+          });
         })
         .catch((err) => {
           reject(new Error(err.response.data.message || err.message));

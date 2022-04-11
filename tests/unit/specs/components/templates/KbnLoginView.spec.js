@@ -77,13 +77,13 @@ describe("KbnLoginView", () => {
         throwReject = jest.spyOn(loginView.vm, "throwReject");
       });
       it("error handler is called", () => {
-        const message = new Error("login failed");
-        actions.login.mockRejectedValue(message);
+        const err = new Error("login failed");
+        actions.login.mockRejectedValue(err);
         triggerLogin(loginView, LoginFormComponentStub);
         setImmediate(() => {
           const mockFn = actions.login;
           expect(mockFn).toHaveBeenCalled();
-          expect(throwReject).toBeCalledWith(message);
+          expect(throwReject).toBeCalledWith(err);
         });
       });
     });
