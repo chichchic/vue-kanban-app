@@ -9,7 +9,7 @@ export default {
           resolve(res);
         })
         .catch((err) => {
-          reject(new Error(err.data.message || err.message));
+          reject(new Error(err.response.data.message || err.message));
         });
     }),
 };

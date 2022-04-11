@@ -1,9 +1,13 @@
 import * as types from "@/store/mutation-types";
 import actions from "@/store/actions";
-import auth from "@/api/auth";
+import api from "@/api";
 
-jest.mock("@/api/auth");
-
+jest.mock("@/api");
+const mockLoginAction = (login) => {
+  api.Auth = {
+    login,
+  };
+};
 describe("login action", () => {
   const address = "foo@domain.com";
   const password = "12345678";
@@ -11,16 +15,11 @@ describe("login action", () => {
   describe("Auth.login success", () => {
     const token = "1234567890abcdef";
     const userId = 1;
-    beforeEach(() => {
-      jest.mock("@/api/auth");
-      auth.login.mockResolvedValueOnce(
-        Promise.resolve({
-          token,
-          userId,
-        })
-      );
+    beforeEach(async () => {
+      const login = () => Promise.resolve({ token, userId });
+      mockLoginAction(login);
       commit = jest.fn();
-      actions.login({ commit }, { address, password });
+      await actions.login({ commit }, { address, password });
     });
     it("successed", () => {
       expect(commit).toBeCalled();
@@ -31,14 +30,10 @@ describe("login action", () => {
     const message = "login failed";
     let future;
     beforeEach(async () => {
-      jest.mock("@/api/auth");
-      auth.login.mockRejectedValueOnce(Promise.reject(new Error(message)));
+      const login = () => Promise.reject(new Error(message));
+      mockLoginAction(login);
       commit = jest.fn();
-      try {
-        await actions.login({ commit });
-      } catch (error) {
-        future = error;
-      }
+      future = await actions.login({ commit });
     });
     it("failed", () => {
       expect(commit).toBeCalledTimes(0);

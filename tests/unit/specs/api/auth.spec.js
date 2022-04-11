@@ -1,7 +1,12 @@
-import client from "@/api/client";
+import axios from "axios";
 import auth from "@/api/auth";
+import client from "@/api/client";
 
 jest.mock("@/api/client");
+
+const mockAuth = (adapter) => {
+  client.post = axios.create({ adapter }).post;
+};
 
 describe("Auth API module", () => {
   describe("login", () => {
@@ -11,11 +16,11 @@ describe("Auth API module", () => {
     const password = "123456";
     describe("successed", () => {
       it("got token,userId", async () => {
-        client.post.mockResolvedValueOnce(
-          new Promise((res) => {
-            res({ data: { token, userId }, status: 200 });
-          })
-        );
+        const adapter = () =>
+          new Promise((response) => {
+            response({ data: { token, userId }, status: 200 });
+          });
+        mockAuth(adapter);
         const res = await auth.login({
           address,
           password,
@@ -26,12 +31,14 @@ describe("Auth API module", () => {
     describe("Error", () => {
       it("got Error message", async () => {
         const message = "failed login";
+        const adapter = () =>
+          new Promise((response, reject) => {
+            const err = new Error(message);
+            err.response = { data: { message }, status: 401 };
+            reject(err);
+          });
+        mockAuth(adapter);
         try {
-          jest
-            .spyOn(client, "post")
-            .mockImplementation(() =>
-              Promise.reject({ data: { message }, status: 401 })
-            );
           await auth.login({ address, password });
         } catch (err) {
           expect(err.message).toEqual(message);
